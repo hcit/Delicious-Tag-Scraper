@@ -1,30 +1,34 @@
 from mechanize import Browser, _http
 from BeautifulSoup import BeautifulSoup
+import re 
 
 
 
 #Extracts links with property rel = nofollow
 def extract (soup):
- links = soup.findAll('a',rel='nofollow')
- for link in links:
-     print >> outfile, link['href']
- 
- hits = soup.findAll('span', attrs={'class': 'delNavCount'})
- for hit in hits:
-     print hit.contents
-
+    
+    bookmarkset = soup.findAll('div', 'data')
+    for bookmark in bookmarkset:
+        link = bookmark.find('a',)
+        vote = bookmark.find('span','delNavCount')
+        try:
+            print >> outfile, link['href'], " | " ,vote.contents
+        except:
+            print >> outfile, "[u'0']"
+    #print bookmarkset
 
     
 #File to export data to
-outfile = open("albums.txt", "w")
+outfile = open("output.txt", "w")
+
 #Browser Agent
 br = Browser()    
 br.set_handle_robots(False)
 br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
-
-#url = "http://www.delicious.com/tag/p2p"
-url= "http://www.delicious.com/search?p=varun"
+tagID= raw_input("Which delicious tag would you like to backup?: ")
+url= "http://www.delicious.com/tag/" + tagID
+print url
 page = br.open(url)
 html = page.read()
 soup = BeautifulSoup(html)
@@ -33,9 +37,8 @@ extract(soup)
 count=1
 #Follows regexp match onto consecutive pages
 while soup.find ('a', attrs={'class': 'pn next'}):
-    print "yay"
-    print count
-    endOfPage = "false"
+    print "Page:", count
+    endOfPage = 0
     try :
         page3 = br.follow_link(text_regex="Next")
         html3 = page3.read()
@@ -43,8 +46,8 @@ while soup.find ('a', attrs={'class': 'pn next'}):
         extract(soup3)
     except:
         print "End of Pages"
-        endOfPage = "true"
-    if valval == "true":
+        endOfPage = 1
+    if endOfPage == 1:
         break
     count = count +1
 
