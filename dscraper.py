@@ -26,8 +26,8 @@ br = Browser()
 br.set_handle_robots(False)
 br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
-tagID= raw_input("Which delicious tag would you like to backup?: ")
-url= "http://www.delicious.com/tag/" + tagID
+tagID= raw_input("Which delicious page would you like to backup?: ")
+url= "http://www.delicious.com/" + tagID
 print url
 page = br.open(url)
 html = page.read()
