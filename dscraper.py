@@ -51,12 +51,6 @@ while soup.find ('a', attrs={'class': 'pn next'}):
         break
     count = count +1
 
-
-#Follows regexp match onto next page
-#page2 = br.follow_link(text_regex="Next")
-#html2 = page2.read()
-#soup2 = BeautifulSoup(html2)
-#extract(soup2)
     
 #debug
 print "done"
